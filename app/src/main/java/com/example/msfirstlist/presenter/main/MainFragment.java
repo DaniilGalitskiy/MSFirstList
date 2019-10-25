@@ -35,17 +35,6 @@ public class MainFragment extends MvpFragment implements MainView {
     private TextView tvEmpty;
     private MenuItem searchMenuItem;
 
-    private boolean expanded = false;
-    private String searchText = "";
-
-    /*@Inject
-    Router router;
-
-    @ProvidePresenter
-    public MainPresenter createMainPresenter(){
-        return new MainPresenter(router);
-    }*/
-
     @InjectPresenter
     MainPresenter presenter;
 
@@ -63,17 +52,17 @@ public class MainFragment extends MvpFragment implements MainView {
         return fragment;
     }
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         initComponent(view);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     private void initComponent(View view) {
@@ -129,10 +118,6 @@ public class MainFragment extends MvpFragment implements MainView {
         presenter.onSaveInstanceState(outState, searchMenuItem.isActionViewExpanded());
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
 
 
     @Override
@@ -149,16 +134,6 @@ public class MainFragment extends MvpFragment implements MainView {
         expanded = isExpanded;
     }
 
-    private final View.OnClickListener onClickListener = v -> {
-        switch (v.getId()) {
-            case R.id.linearMainList:
-                presenter.onCardClicked("test");
-                break;
-            default:
-                break;
-        }
-    };
-
     @Override
     public void showError(String msg) {
         AlertDialog.Builder adb = new AlertDialog.Builder(getActivity(), R.style.Theme_AppCompat_Dialog_Alert)
@@ -173,9 +148,13 @@ public class MainFragment extends MvpFragment implements MainView {
         alertDialog.show();
     }
 
-    @Override
-    public void onDestroy() {
-        presenter.dispose();
-        super.onDestroy();
-    }
+    private final View.OnClickListener onClickListener = v -> {
+        switch (v.getId()) {
+            case R.id.linearMainList:
+                presenter.onCardClicked("test");
+                break;
+            default:
+                break;
+        }
+    };
 }

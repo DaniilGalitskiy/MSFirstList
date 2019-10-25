@@ -1,6 +1,15 @@
 package com.example.msfirstlist.repository.db_repository.dao;
 
-/*
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Update;
+
+import com.example.msfirstlist.repository.net.entity.Repos;
+
+import java.util.List;
+
 @Dao
 public interface ReposDao {
     @Query("SELECT * FROM repos")
@@ -15,4 +24,3 @@ public interface ReposDao {
     @Delete
     void delete(Repos repos);
 }
-*/

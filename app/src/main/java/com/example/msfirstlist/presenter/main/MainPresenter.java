@@ -36,8 +36,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
         router.navigateTo(new Screens.ReposScreen(reposName));
     }
 
-    void dispose(){ }
-
     public void onCreate(Bundle savedInstanceState) {
         if (savedInstanceState != null){
             getViewState().setSearchActionViewExpaned(savedInstanceState.getBoolean(ARG_EXPANDED));
