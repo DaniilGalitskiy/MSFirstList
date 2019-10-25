@@ -6,7 +6,8 @@ import com.arellomobile.mvp.viewstate.strategy.StateStrategyType;
 
 @StateStrategyType(AddToEndSingleStrategy.class)
 public interface MainView extends MvpView {
-    void setAdapter();
+    void setSearchQueryText(String query);
     void showError(String msg);
-    void setSearchActionViewExpaned(boolean isExpanded);
+    void setSearchActionViewVisible(boolean isVisible);
+    void showLoader();
 }

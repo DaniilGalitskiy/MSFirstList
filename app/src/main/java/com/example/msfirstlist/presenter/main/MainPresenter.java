@@ -15,37 +15,43 @@ import ru.terrakok.cicerone.Router;
 @InjectViewState
 public class MainPresenter extends MvpPresenter<MainView> {
 
-    private static final String ARG_EXPANDED = "expanded";
+    private static final String ARG_SEARCHVISIBLE= "searchVisible";
+    private static final String ARG_SEARCHQUERY= "searchQuery";
+
+    private String searchQuery = "";
+    private boolean searchVisible;
 
     @Inject
     Router router;
 
-    private String reposName;
-    private boolean expanded;
-    private Bundle bundle;
-
     public MainPresenter() {
-        App.INSTANCE.getAppComponent().inject(this);
+        App.getAppComponent().inject(this);
     }
 
-    void getRepos(){
-        getViewState().setAdapter();
+    public void filter(String newText){
+        searchQuery = newText;
+        getViewState().setSearchQueryText(searchQuery);
     }
 
-    void onCardClicked(String reposName){
-        router.navigateTo(new Screens.ReposScreen(reposName));
+    public void searchVisible(boolean searchVisible){
+        this.searchVisible = searchVisible;
+        getViewState().setSearchActionViewVisible(searchVisible);
     }
 
-    void dispose(){ }
+    void onItemClicked(String repoName){
+        router.navigateTo(new Screens.RepoScreen(repoName));
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         if (savedInstanceState != null){
-            getViewState().setSearchActionViewExpaned(savedInstanceState.getBoolean(ARG_EXPANDED));
+            getViewState().setSearchActionViewVisible(savedInstanceState.getBoolean(ARG_SEARCHVISIBLE));
+            getViewState().setSearchQueryText(savedInstanceState.getString(ARG_SEARCHQUERY));
         }
     }
 
-    public void onSaveInstanceState(Bundle outState, boolean expanded) {
-        outState.putBoolean(ARG_EXPANDED, expanded);
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(ARG_SEARCHVISIBLE, searchVisible);
+        outState.putString(ARG_SEARCHQUERY, searchQuery);
     }
 
 }

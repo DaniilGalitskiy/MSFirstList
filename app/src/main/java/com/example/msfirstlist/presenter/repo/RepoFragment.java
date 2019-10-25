@@ -1,4 +1,4 @@
-package com.example.msfirstlist.presenter.repos;
+package com.example.msfirstlist.presenter.repo;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,39 +19,39 @@ import javax.inject.Inject;
 
 import ru.terrakok.cicerone.Router;
 
-public class ReposFragment extends MvpFragment implements ReposView{
+public class RepoFragment extends MvpFragment implements RepoView{
 
-    private static final String EXTRA_REPOS = "extra_repos";
+    private static final String EXTRA_REPO = "extra_repo";
 
-    private Button btBack;
-    private TextView tvRepos;
+    private Button backButton;
+    private TextView repoTextView;
 
     @Inject
     Router router;
 
     @InjectPresenter
-    ReposPresenter presenter;
+    RepoPresenter presenter;
 
     @ProvidePresenter
-    public ReposPresenter createReposPresenter(){
-        return new ReposPresenter(router, "test");
+    public RepoPresenter createReposPresenter(){
+        return new RepoPresenter(router, "test");
     }
 
-    public ReposFragment getNewInstance(String repos){
-        ReposFragment reposFragment = new ReposFragment();
+    public RepoFragment getNewInstance(String repos){
+        RepoFragment repoFragment = new RepoFragment();
         Bundle args = new Bundle();
-        args.putString(EXTRA_REPOS, repos);
-        reposFragment.setArguments(args);
-        return reposFragment;
+        args.putString(EXTRA_REPO, repos);
+        repoFragment.setArguments(args);
+        return repoFragment;
     }
 
     public String getExtraRepos(){
-        return getArguments().getString(EXTRA_REPOS);
+        return getArguments().getString(EXTRA_REPO);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        App.INSTANCE.getAppComponent().inject(this);
+        App.getAppComponent().inject(this);
         super.onCreate(savedInstanceState);
     }
 
@@ -65,15 +65,15 @@ public class ReposFragment extends MvpFragment implements ReposView{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        btBack = view.findViewById(R.id.btBack);
-        tvRepos = view.findViewById(R.id.tvRepos);
+        backButton = view.findViewById(R.id.back_button);
+        repoTextView = view.findViewById(R.id.repo_textView);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        tvRepos.setText(getExtraRepos());
-        btBack.setOnClickListener(v -> presenter.onBackPressed());
+        repoTextView.setText(getExtraRepos());
+        backButton.setOnClickListener(v -> presenter.onBackPressed());
 
     }
 

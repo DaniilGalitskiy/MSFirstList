@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState == null) {
-            router.newRootScreen(new Screens.MainScreen(1));
+            router.newRootScreen(new Screens.MainScreen());
         }
     }
 

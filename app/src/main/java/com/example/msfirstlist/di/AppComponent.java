@@ -4,7 +4,7 @@ import com.example.msfirstlist.App;
 import com.example.msfirstlist.presenter.main.MainActivity;
 import com.example.msfirstlist.presenter.main.MainFragment;
 import com.example.msfirstlist.presenter.main.MainPresenter;
-import com.example.msfirstlist.presenter.repos.ReposFragment;
+import com.example.msfirstlist.presenter.repo.RepoFragment;
 
 import javax.inject.Singleton;
 
@@ -21,7 +21,7 @@ public interface AppComponent {
 
     void inject(MainFragment fragment);
 
-    void inject(ReposFragment fragment);
+    void inject(RepoFragment fragment);
 
     void inject(MainPresenter presenter);
 }

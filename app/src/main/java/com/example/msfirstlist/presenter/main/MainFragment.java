@@ -1,26 +1,33 @@
 package com.example.msfirstlist.presenter.main;
 
-import android.app.AlertDialog;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.arellomobile.mvp.MvpFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.example.msfirstlist.App;
 import com.example.msfirstlist.R;
 import com.example.msfirstlist.adapter.Entity.ReposList;
 import com.example.msfirstlist.adapter.ReposAdapter;
@@ -28,23 +35,13 @@ import com.example.msfirstlist.adapter.ReposAdapter;
 public class MainFragment extends MvpFragment implements MainView {
 
     private ReposAdapter reposAdapter;
+    private ReposList reposList;
 
-    private Toolbar toolbar;
-    private RecyclerView rvMain;
-    private LinearLayout linearMainList;
-    private TextView tvEmpty;
+    private TextView emptyTextView;
     private MenuItem searchMenuItem;
-
-    private boolean expanded = false;
-    private String searchText = "";
-
-    /*@Inject
-    Router router;
-
-    @ProvidePresenter
-    public MainPresenter createMainPresenter(){
-        return new MainPresenter(router);
-    }*/
+    private LinearLayout mainToolbarLinear;
+    private EditText mainSearchEditText;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @InjectPresenter
     MainPresenter presenter;
@@ -52,40 +49,90 @@ public class MainFragment extends MvpFragment implements MainView {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        App.INSTANCE.getAppComponent().inject(this);
-        setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         presenter.onCreate(savedInstanceState);
     }
 
     public static MainFragment getNewInstance() {
-        MainFragment fragment = new MainFragment();
-        return fragment;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        return new MainFragment();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
-        initComponent(view);
-        return view;
+        return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
-    private void initComponent(View view) {
-        rvMain = view.findViewById(R.id.rvMain);
-        linearMainList = view.findViewById(R.id.linearMainList);
-        toolbar = view.findViewById(R.id.toolbar);
-        tvEmpty = view.findViewById(R.id.tvEmpty);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        init(view);
+    }
+
+    public void init(View view){
+
+        final RecyclerView mainRecyclerView = view.findViewById(R.id.main_recyclerView);
+
+        Toolbar toolbar = view.findViewById(R.id.main_toolbar);
+
+        emptyTextView = view.findViewById(R.id.empty_textView);
+        mainToolbarLinear = view.findViewById(R.id.main_toolbar_linear);
+        mainSearchEditText = view.findViewById(R.id.main_search_editText);
+        swipeRefreshLayout = view.findViewById(R.id.main_swipeRefresh);
+        final ImageView mainBackImageView = view.findViewById(R.id.main_back_imageView);
+        final ImageView mainCloseImageView = view.findViewById(R.id.main_close_imageView);
 
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         activity.setSupportActionBar(toolbar);
 
-        presenter.getRepos();
+        reposList = new ReposList();
+        reposAdapter = new ReposAdapter(reposList.getReposes(), v -> {
+            switch (v.getId()) {
+                case R.id.linearMainList:
+                    presenter.onItemClicked("test");
+                    break;
+                default:
+                    break;
+            }
+        });
+        final LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        mainRecyclerView.setLayoutManager(linearLayout);
+        mainRecyclerView.setAdapter(reposAdapter);
+
+        swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
+            swipeRefreshLayout.setRefreshing(false);
+            reposAdapter.notifyDataSetChanged();
+        }, 1000));
+
+        mainSearchEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                presenter.filter(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        mainBackImageView.setOnClickListener(v -> {
+            presenter.filter("");
+            mainToolbarLinear.setVisibility(View.GONE);
+            searchMenuItem.setVisible(true);
+            InputMethodManager imm;
+            imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            assert imm != null;
+            imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+        });
+
+        mainCloseImageView.setOnClickListener(v -> presenter.filter(""));
+
     }
 
     @Override
@@ -93,32 +140,17 @@ public class MainFragment extends MvpFragment implements MainView {
         inflater.inflate(R.menu.fragment_main_menu, menu);
 
         searchMenuItem = menu.findItem(R.id.actionSearch);
-
-        SearchView searchView = (SearchView) searchMenuItem.getActionView();
-        searchView.setMaxWidth(4000);
-
-        if (expanded){
-            searchMenuItem.expandActionView();
-        }
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
+        searchMenuItem.setOnMenuItemClickListener(item -> {
+            presenter.searchVisible(true);
+            mainSearchEditText.requestFocus();
+            mainSearchEditText.setFocusableInTouchMode(true);
+            if(mainSearchEditText.requestFocus()) {
+                InputMethodManager imm;
+                imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                assert imm != null;
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                reposAdapter.filter(newText);
-                if (reposAdapter.getItemCount() == 0) {
-                    rvMain.setVisibility(View.GONE);
-                    tvEmpty.setVisibility(View.VISIBLE);
-                } else {
-                    rvMain.setVisibility(View.VISIBLE);
-                    tvEmpty.setVisibility(View.GONE);
-                }
-                return true;
-            }
+            return false;
         });
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -126,56 +158,45 @@ public class MainFragment extends MvpFragment implements MainView {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        presenter.onSaveInstanceState(outState, searchMenuItem.isActionViewExpanded());
+        presenter.onSaveInstanceState(outState);
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-
-    @Override
-    public void setAdapter() {
-        ReposList reposList = new ReposList();
-        reposAdapter = new ReposAdapter(reposList.getReposes(), getActivity(), onClickListener);
-        LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        rvMain.setLayoutManager(linearLayout);
-        rvMain.setAdapter(reposAdapter);
-    }
-
-    @Override
-    public void setSearchActionViewExpaned(boolean isExpanded) {
-        expanded = isExpanded;
-    }
-
-    private final View.OnClickListener onClickListener = v -> {
-        switch (v.getId()) {
-            case R.id.linearMainList:
-                presenter.onCardClicked("test");
-                break;
-            default:
-                break;
+    public void setSearchActionViewVisible(boolean isVisible) {
+        if (isVisible){
+            mainToolbarLinear.setVisibility(View.VISIBLE);
+            searchMenuItem.setVisible(false);
         }
-    };
+        else{
+            mainToolbarLinear.setVisibility(View.GONE);
+            searchMenuItem.setVisible(true);
+        }
+    }
 
+    @Override
+    public void showLoader() {
+
+    }
+
+    @Override
+    public void setSearchQueryText(String query) {
+        reposList.filter(query);
+        reposAdapter.notifyDataSetChanged();
+
+        if (reposList.getReposes().size() == 0)
+        {
+            emptyTextView.setVisibility(View.VISIBLE);
+        } else {
+            emptyTextView.setVisibility(View.GONE);
+        }
+
+        if (mainSearchEditText.getText().toString().equals(query)) return;
+        mainSearchEditText.setText(query);
+    }
+
+    @SuppressLint("ShowToast")
     @Override
     public void showError(String msg) {
-        AlertDialog.Builder adb = new AlertDialog.Builder(getActivity(), R.style.Theme_AppCompat_Dialog_Alert)
-                .setTitle("Error")
-                .setCancelable(true)
-                .setMessage(msg)
-                .setPositiveButton("Ok", (dialog, which) -> {
-                    dialog.cancel();
-                    dialog.dismiss();
-                });
-        AlertDialog alertDialog = adb.create();
-        alertDialog.show();
-    }
-
-    @Override
-    public void onDestroy() {
-        presenter.dispose();
-        super.onDestroy();
+        Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
     }
 }

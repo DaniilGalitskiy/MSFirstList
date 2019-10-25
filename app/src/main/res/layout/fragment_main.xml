@@ -1,37 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/main_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimaryDark"
+        android:background="@color/primary_dark"
         android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvMain"
+        <LinearLayout
+            android:id="@+id/main_toolbar_linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/rectangle_rounded_edittext_toolbar"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/main_back_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:background="@drawable/ripple_search"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_arrow_back_black_24dp" />
+
+            <EditText
+                android:id="@+id/main_search_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:hint="@string/search"
+                android:background="@null"
+                android:maxLines="1"
+                android:lines="1"
+                android:inputType="text"
+                android:textColor="@color/primary_dark" />
+
+            <ImageView
+                android:id="@+id/main_close_imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="8dp"
+                android:background="@drawable/ripple_search"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@drawable/ic_close_black_24dp" />
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.core.widget.ContentLoadingProgressBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:background="@drawable/custom_ripple"
-        android:clickable="true"
-        android:focusable="true"/>
+        app:layout_constraintTop_toBottomOf="@+id/main_toolbar"/>
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/main_swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_below="@+id/main_toolbar"
+        app:layout_constraintTop_toBottomOf="@id/main_toolbar"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/main_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/main_toolbar"
+            android:clickable="true"
+            android:focusable="true"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <TextView
-        android:id="@+id/tvEmpty"
+        android:id="@+id/empty_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:text="@string/list_is_empty"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/custom_ripple"
         android:textSize="14sp"
-        android:visibility="gone"/>
-</RelativeLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:visibility="visible"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

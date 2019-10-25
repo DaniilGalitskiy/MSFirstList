@@ -1,4 +1,4 @@
-package com.example.msfirstlist.presenter.repos;
+package com.example.msfirstlist.presenter.repo;
 
 import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
@@ -6,13 +6,13 @@ import com.arellomobile.mvp.MvpPresenter;
 import ru.terrakok.cicerone.Router;
 
 @InjectViewState
-public class ReposPresenter extends MvpPresenter<ReposView> {
+public class RepoPresenter extends MvpPresenter<RepoView> {
     private Router router;
-    private String reposName;
+    private String repoName;
 
-    public ReposPresenter(Router router, String reposName) {
+    public RepoPresenter(Router router, String repoName) {
         this.router = router;
-        this.reposName = reposName;
+        this.repoName = repoName;
     }
 
     public void onBackPressed(){

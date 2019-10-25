@@ -1,8 +1,11 @@
 package com.example.msfirstlist.repository.db_repository.db_entities;
 
-//@Entity(tableName = "repos")
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "repos")
 public class DBRepos {
-/*
     @PrimaryKey
     private int id;
     @ColumnInfo(name = "name")
@@ -22,6 +25,6 @@ public class DBRepos {
 
     public void setName(String name) {
         this.name = name;
-    }*/
+    }
 
 }
