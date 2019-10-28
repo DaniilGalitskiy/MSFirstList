@@ -5,30 +5,29 @@ import android.content.Context;
 import androidx.room.Room;
 
 import com.example.msfirstlist.repository.db_repository.DefAppDatabase;
-import com.example.msfirstlist.repository.db_repository.dao.ReposDao;
+import com.example.msfirstlist.repository.db_repository.dao.RepoDao;
+import com.example.msfirstlist.repository.net.ApiNetwork;
+import com.example.msfirstlist.repository.net.DefApiNetwork;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import dagger.android.support.AndroidSupportInjectionModule;
 import ru.terrakok.cicerone.Cicerone;
 import ru.terrakok.cicerone.NavigatorHolder;
 import ru.terrakok.cicerone.Router;
 
-@Module
+
+@Module(includes = {AndroidSupportInjectionModule.class})
 public class AppModule {
 
-    @Singleton
     @Provides
-    public DefAppDatabase defAppDatabase(Context context) {
+    public RepoDao repoDao(Context context) {
         return Room.databaseBuilder(context, DefAppDatabase.class, "repo")
-                .build();
-    }
-
-    @Singleton
-    @Provides
-    ReposDao reposDao(DefAppDatabase defAppDatabase){
-        return defAppDatabase.getReposDao();
+                .fallbackToDestructiveMigration()
+                .build()
+                .getRepoDao();
     }
 
     private Cicerone<Router> cicerone;
@@ -44,8 +43,14 @@ public class AppModule {
     }
 
     @Provides
+    static ApiNetwork DefApiNetwork(){
+        return new DefApiNetwork();
+    }
+
+    @Provides
     @Singleton
     NavigatorHolder provideNavigatorHolder() {
         return cicerone.getNavigatorHolder();
     }
+
 }

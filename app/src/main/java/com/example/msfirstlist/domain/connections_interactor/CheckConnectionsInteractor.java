@@ -1,4 +1,5 @@
 package com.example.msfirstlist.domain.connections_interactor;
 
-public class CheckConnectionsInteractor {
+public interface CheckConnectionsInteractor {
+
 }

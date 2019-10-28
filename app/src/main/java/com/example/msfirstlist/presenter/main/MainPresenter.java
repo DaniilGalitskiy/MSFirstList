@@ -6,6 +6,8 @@ import com.arellomobile.mvp.InjectViewState;
 import com.arellomobile.mvp.MvpPresenter;
 import com.example.msfirstlist.App;
 import com.example.msfirstlist.Screens;
+import com.example.msfirstlist.domain.db_interactor.DataBaseInteractor;
+import com.example.msfirstlist.domain.start_data_interactor.StartDataIteractor;
 
 import javax.inject.Inject;
 
@@ -23,6 +25,12 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
     @Inject
     Router router;
+
+    @Inject
+    DataBaseInteractor dataBaseInteractor;
+
+    @Inject
+    StartDataIteractor startDataIteractor;
 
     public MainPresenter() {
         App.getAppComponent().inject(this);

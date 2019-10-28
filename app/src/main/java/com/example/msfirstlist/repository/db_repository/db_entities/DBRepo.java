@@ -1,21 +1,20 @@
 package com.example.msfirstlist.repository.db_repository.db_entities;
 
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "repos")
-public class DBRepos {
+@Entity
+public class DBRepo {
     @PrimaryKey
-    private int id;
-    @ColumnInfo(name = "name")
+    private long id;
+
     private String name;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

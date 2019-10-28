@@ -7,8 +7,6 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -32,7 +29,7 @@ import com.example.msfirstlist.R;
 import com.example.msfirstlist.adapter.Entity.ReposList;
 import com.example.msfirstlist.adapter.ReposAdapter;
 
-public class MainFragment extends MvpFragment implements MainView {
+public class MainFragment extends MvpFragment implements MainView, ReposAdapter.ItemClickListener {
 
     private ReposAdapter reposAdapter;
     private ReposList reposList;
@@ -50,7 +47,6 @@ public class MainFragment extends MvpFragment implements MainView {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
         presenter.onCreate(savedInstanceState);
     }
 
@@ -83,19 +79,9 @@ public class MainFragment extends MvpFragment implements MainView {
         final ImageView mainBackImageView = view.findViewById(R.id.main_back_imageView);
         final ImageView mainCloseImageView = view.findViewById(R.id.main_close_imageView);
 
-        AppCompatActivity activity = (AppCompatActivity) getActivity();
-        activity.setSupportActionBar(toolbar);
-
         reposList = new ReposList();
-        reposAdapter = new ReposAdapter(reposList.getReposes(), v -> {
-            switch (v.getId()) {
-                case R.id.linearMainList:
-                    presenter.onItemClicked("test");
-                    break;
-                default:
-                    break;
-            }
-        });
+        reposAdapter = new ReposAdapter(reposList.getReposes());
+        reposAdapter.setClickListener(this);
         final LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mainRecyclerView.setLayoutManager(linearLayout);
         mainRecyclerView.setAdapter(reposAdapter);
@@ -133,13 +119,10 @@ public class MainFragment extends MvpFragment implements MainView {
 
         mainCloseImageView.setOnClickListener(v -> presenter.filter(""));
 
-    }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_main_menu, menu);
-
-        searchMenuItem = menu.findItem(R.id.actionSearch);
+        toolbar.setTitle(R.string.app_name);
+        getActivity().getMenuInflater().inflate(R.menu.fragment_main_menu, toolbar.getMenu());
+        searchMenuItem = toolbar.getMenu().findItem(R.id.actionSearch);
         searchMenuItem.setOnMenuItemClickListener(item -> {
             presenter.searchVisible(true);
             mainSearchEditText.requestFocus();
@@ -152,7 +135,6 @@ public class MainFragment extends MvpFragment implements MainView {
             }
             return false;
         });
-        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -198,5 +180,16 @@ public class MainFragment extends MvpFragment implements MainView {
     @Override
     public void showError(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        switch (view.getId()) {
+            case R.id.linearMainList:
+                presenter.onItemClicked(reposAdapter.getItemName(position));
+                break;
+            default:
+                break;
+        }
     }
 }

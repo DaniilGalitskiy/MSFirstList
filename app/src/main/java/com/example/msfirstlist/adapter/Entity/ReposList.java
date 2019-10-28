@@ -7,7 +7,7 @@ import java.util.Locale;
 
 public class ReposList {
 
-    private List<Repo> reposes;
+    private List<Repos> reposes;
 
     public void filter(String charText){
         ReposList reposList = new ReposList();
@@ -17,7 +17,7 @@ public class ReposList {
             reposes.addAll(reposList.reposes);
         }
         else {
-            for (Repo r : reposList.reposes){
+            for (Repos r : reposList.reposes){
                 if (r.getName().toLowerCase(Locale.getDefault())
                         .contains(charText)){
                     reposes.add(r);
@@ -29,15 +29,15 @@ public class ReposList {
     public ReposList() {
         reposes = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            Repo repo = new Repo();
-            repo.setId(i);
-            repo.setName("Repo#" + i);
-            reposes.add(repo);
+            Repos repos = new Repos();
+            repos.setId(i);
+            repos.setName("Repos#" + i);
+            reposes.add(repos);
 
         }
     }
 
-    public List<Repo> getReposes() {
+    public List<Repos> getReposes() {
         return reposes;
     }
 

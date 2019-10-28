@@ -34,7 +34,7 @@ public class RepoFragment extends MvpFragment implements RepoView{
 
     @ProvidePresenter
     public RepoPresenter createReposPresenter(){
-        return new RepoPresenter(router, "test");
+        return new RepoPresenter(router, getExtraRepos());
     }
 
     public RepoFragment getNewInstance(String repos){

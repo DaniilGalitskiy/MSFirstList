@@ -8,21 +8,20 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.msfirstlist.R;
-import com.example.msfirstlist.adapter.Entity.Repo;
+import com.example.msfirstlist.adapter.Entity.Repos;
 
 import java.util.List;
 
 public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> {
 
-    private List<Repo> reposes;
+    private List<Repos> reposes;
 
     private View view;
-    private View.OnClickListener onClickListener;
+    private ItemClickListener onClickListener;
 
 
-    public ReposAdapter(List<Repo> reposList, View.OnClickListener onClickListener) {
+    public ReposAdapter(List<Repos> reposList) {
         this.reposes = reposList;
-        this.onClickListener = onClickListener;
     }
 
     @Override
@@ -30,7 +29,7 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
         view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_main, parent, false);
 
-        return new ReposAdapter.ViewHolder(view, onClickListener);
+        return new ReposAdapter.ViewHolder(view);
     }
 
     @Override
@@ -40,7 +39,12 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return reposes.get(position).getId();
+    }
+
+
+    public String getItemName(int position) {
+        return reposes.get(position).getName();
     }
 
     @Override
@@ -51,10 +55,21 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tvMainList;
 
-        ViewHolder(View itemView, View.OnClickListener onClickListener) {
+        ViewHolder(View itemView) {
             super(itemView);
             tvMainList = view.findViewById(R.id.main_item_textView);
-            view.setOnClickListener(onClickListener);
+            itemView.setOnClickListener(v -> {
+                if (onClickListener != null)
+                    onClickListener.onItemClick(v, getAdapterPosition());
+            });
         }
+    }
+
+    public void setClickListener(ItemClickListener itemClickListener) {
+        this.onClickListener = itemClickListener;
+    }
+
+    public interface ItemClickListener {
+        void onItemClick(View view, int position);
     }
 }

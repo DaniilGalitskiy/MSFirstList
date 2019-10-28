@@ -1,6 +1,6 @@
 package com.example.msfirstlist.adapter.Entity;
 
-public class Repo {
+public class Repos {
     private int id;
     private String name;
 
