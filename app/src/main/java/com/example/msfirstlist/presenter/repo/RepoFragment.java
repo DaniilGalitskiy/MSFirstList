@@ -65,8 +65,8 @@ public class RepoFragment extends MvpFragment implements RepoView{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        backButton = view.findViewById(R.id.back_button);
-        repoTextView = view.findViewById(R.id.repo_textView);
+        backButton = view.findViewById(R.id.backButton);
+        repoTextView = view.findViewById(R.id.repoTextView);
     }
 
     @Override

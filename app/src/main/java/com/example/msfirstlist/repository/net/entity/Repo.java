@@ -1,16 +1,18 @@
 package com.example.msfirstlist.repository.net.entity;
 
-import com.google.gson.annotations.Expose;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
+@Entity
 public class Repo {
 
+    @PrimaryKey
     @SerializedName("id")
-    @Expose
     private long id;
 
     @SerializedName("name")
-    @Expose
     private String name;
 
     public long getId() {

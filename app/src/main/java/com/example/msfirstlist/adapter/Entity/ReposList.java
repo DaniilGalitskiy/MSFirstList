@@ -1,13 +1,14 @@
 package com.example.msfirstlist.adapter.Entity;
 
 
-import java.util.ArrayList;
+import com.example.msfirstlist.repository.net.entity.Repo;
+
 import java.util.List;
 import java.util.Locale;
 
 public class ReposList {
 
-    private List<Repos> reposes;
+    private List<Repo> reposes;
 
     public void filter(String charText){
         ReposList reposList = new ReposList();
@@ -17,7 +18,7 @@ public class ReposList {
             reposes.addAll(reposList.reposes);
         }
         else {
-            for (Repos r : reposList.reposes){
+            for (Repo r : reposList.reposes){
                 if (r.getName().toLowerCase(Locale.getDefault())
                         .contains(charText)){
                     reposes.add(r);
@@ -26,18 +27,27 @@ public class ReposList {
         }
     }
 
-    public ReposList() {
-        reposes = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            Repos repos = new Repos();
-            repos.setId(i);
-            repos.setName("Repos#" + i);
-            reposes.add(repos);
+//    public ReposList() {
+//        reposes = new ArrayList<>();
+//        for (int i = 0; i < 100; i++) {
+//            Repos repos = new Repos();
+//            repos.setId(i);
+//            repos.setName("Repos#" + i);
+//            reposes.add(repos);
+//
+//        }
+//    }
 
-        }
-    }
+//    public ReposList addAll(List<Repo> repoList){
+//        ReposList reposList = new ReposList();
+//        reposes = new ArrayList<>();
+//        for(Repo r : repoList){
+//            reposes.add(r);
+//        }
+//        return reposList;
+//    }
 
-    public List<Repos> getReposes() {
+    public List<Repo> getReposes() {
         return reposes;
     }
 

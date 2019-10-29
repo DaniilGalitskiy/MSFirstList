@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     NavigatorHolder navigatorHolder;
 
-    private Navigator navigator = new AppNavigator(this, R.id.main_container);
+    private Navigator navigator = new AppNavigator(this, R.id.mainContainer);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

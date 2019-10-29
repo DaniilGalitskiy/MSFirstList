@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/main_toolbar"
+        android:id="@+id/mainToolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/primary_dark"
@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
-            android:id="@+id/main_toolbar_linear"
+            android:id="@+id/mainToolbarLinear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -26,7 +26,7 @@
             android:visibility="gone">
 
             <ImageView
-                android:id="@+id/main_back_imageView"
+                android:id="@+id/mainBackSearchQuery"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -37,7 +37,7 @@
                 android:src="@drawable/ic_arrow_back_black_24dp" />
 
             <EditText
-                android:id="@+id/main_search_editText"
+                android:id="@+id/mainClearSearchQuery"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -50,7 +50,7 @@
                 android:textColor="@color/primary_dark" />
 
             <ImageView
-                android:id="@+id/main_close_imageView"
+                android:id="@+id/mainClearImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -65,27 +65,27 @@
     <androidx.core.widget.ContentLoadingProgressBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/main_toolbar"/>
+        app:layout_constraintTop_toBottomOf="@+id/mainToolbar"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/main_swipeRefresh"
+        android:id="@+id/mainSwipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@+id/main_toolbar"
-        app:layout_constraintTop_toBottomOf="@id/main_toolbar"
+        android:layout_below="@+id/mainToolbar"
+        app:layout_constraintTop_toBottomOf="@id/mainToolbar"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/main_recyclerView"
+            android:id="@+id/mainRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/main_toolbar"
+            android:layout_below="@+id/mainToolbar"
             android:clickable="true"
             android:focusable="true"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <TextView
-        android:id="@+id/empty_textView"
+        android:id="@+id/emptyTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/list_is_empty"

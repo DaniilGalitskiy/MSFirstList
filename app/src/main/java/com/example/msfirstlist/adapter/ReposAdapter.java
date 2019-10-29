@@ -8,20 +8,24 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.msfirstlist.R;
-import com.example.msfirstlist.adapter.Entity.Repos;
+import com.example.msfirstlist.repository.net.entity.Repo;
 
 import java.util.List;
 
 public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> {
 
-    private List<Repos> reposes;
+    private List<Repo> reposes;
 
     private View view;
     private ItemClickListener onClickListener;
 
 
-    public ReposAdapter(List<Repos> reposList) {
+    public ReposAdapter(List<Repo> reposList) {
         this.reposes = reposList;
+    }
+
+    public void setReposes(List<Repo> reposes) {
+        this.reposes = reposes;
     }
 
     @Override
@@ -57,7 +61,7 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
 
         ViewHolder(View itemView) {
             super(itemView);
-            tvMainList = view.findViewById(R.id.main_item_textView);
+            tvMainList = view.findViewById(R.id.mainItemTextView);
             itemView.setOnClickListener(v -> {
                 if (onClickListener != null)
                     onClickListener.onItemClick(v, getAdapterPosition());
