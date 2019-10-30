@@ -85,13 +85,12 @@ public class MainFragment extends MvpFragment implements MainView, ReposAdapter.
         final ImageView mainClearSearchQuery = view.findViewById(R.id.mainClearImageView);
 
         reposList = new ReposList();
+        reposAdapter = new ReposAdapter();
 //        presenter.reloadRepos();
 
 //        reposAdapter = new ReposAdapter(reposList.getReposes());
-        reposAdapter.setClickListener(this);
         final LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         mainRecyclerView.setLayoutManager(linearLayout);
-        mainRecyclerView.setAdapter(reposAdapter);
 
         swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
             swipeRefreshLayout.setRefreshing(false);
@@ -171,6 +170,8 @@ public class MainFragment extends MvpFragment implements MainView, ReposAdapter.
     public void setAdapter(List<Repo> repoList) {
         reposAdapter.setReposes(repoList);
         reposAdapter.notifyDataSetChanged();
+        reposAdapter.setClickListener(this);
+        mainRecyclerView.setAdapter(reposAdapter);
     }
 
     @Override

@@ -20,8 +20,7 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
     private ItemClickListener onClickListener;
 
 
-    public ReposAdapter(List<Repo> reposList) {
-        this.reposes = reposList;
+    public ReposAdapter() {
     }
 
     public void setReposes(List<Repo> reposes) {

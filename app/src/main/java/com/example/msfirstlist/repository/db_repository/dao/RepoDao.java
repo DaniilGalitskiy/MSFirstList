@@ -22,7 +22,7 @@ public interface RepoDao {
     @Query("SELECT * FROM Repo WHERE id = :id")
     Single<Repo> getRepoById(long id);
 
-    @Query("SELECT * FROM Repo WHERE name like :name")
+    @Query("SELECT * FROM Repo WHERE name like '%'||:name||'%'")
     Observable<List<Repo>> getRepoByName(String name);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
