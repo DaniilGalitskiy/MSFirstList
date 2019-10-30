@@ -12,6 +12,7 @@ public interface MainView extends MvpView {
     void setSearchQueryText(String query);
     void showError(String msg);
     void setSearchActionViewVisible(boolean isVisible);
+    void setVisibleEmptySearchRepos();
     void showLoader();
-    void setAdapter(List<Repo> repoList);
+    void setRepos(List<Repo> repoList);
 }

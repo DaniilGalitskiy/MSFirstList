@@ -61,7 +61,8 @@ public class MainPresenter extends MvpPresenter<MainView> {
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(repoList -> {
-                getViewState().setAdapter(repoList);
+                getViewState().setRepos(repoList);
+                getViewState().setVisibleEmptySearchRepos();
             });
 
     public MainPresenter() {
@@ -69,8 +70,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
         queryBehaviorSubject.onNext("");
         reloadRepos();
     }
-
-
 
     public void onQueryTextChanged(String newText) {
         queryBehaviorSubject.onNext(newText);
@@ -82,11 +81,15 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
     public void onCloseSearchClick() {
         isSearchVisibleBehaviorSubject.onNext(false);
+        onClearSearchClick();
+    }
+
+    public void onClearSearchClick() {
         getViewState().setSearchQueryText("");
     }
 
-    void onItemClicked(String repoName) {
-        router.navigateTo(new Screens.RepoScreen(repoName));
+    void onItemClicked(Repo repo) {
+        router.navigateTo(new Screens.RepoScreen(repo.getName()));
     }
 
     public void onCreate(Bundle savedInstanceState) {
@@ -116,20 +119,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
                 getViewState().showError("Неизвестная ошибка reloadRepos()\n" + throwable.getMessage());
         });
     }
-
-/*    private void getAllRepos() {
-        if (reloadDisposable != null) reloadDisposable.dispose();
-        reloadDisposable = dataBaseInteractor.getAll(queryBehaviorSubject.getValue())
-                .subscribe(repos -> {
-                    getViewState().setAdapter(repos);
-                }, throwable -> {
-                    if (throwable instanceof NullPointerException)
-                        getViewState().showError("Ошибка бд getAll()\n" + throwable.getMessage());
-                    else
-                        getViewState().showError("Неизвестная ошибка getAll()\n" + throwable.getMessage());
-                });
-    }*/
-
 
     @Override
     public void onDestroy() {

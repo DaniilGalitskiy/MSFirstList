@@ -10,26 +10,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.msfirstlist.R;
 import com.example.msfirstlist.repository.net.entity.Repo;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> {
 
-    private List<Repo> reposes;
+    private List<Repo> reposes = Collections.emptyList();
 
-    private View view;
-    private ItemClickListener onClickListener;
+    private Listener listener;
 
 
-    public ReposAdapter() {
+    public ReposAdapter(Listener listener) {
+        this.listener = listener;
     }
 
     public void setReposes(List<Repo> reposes) {
         this.reposes = reposes;
+        notifyDataSetChanged();
     }
 
     @Override
     public ReposAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        view = LayoutInflater.from(parent.getContext())
+        final View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_main, parent, false);
 
         return new ReposAdapter.ViewHolder(view);
@@ -40,15 +42,15 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
         holder.tvMainList.setText(reposes.get(position).getName());
     }
 
-    @Override
-    public long getItemId(int position) {
-        return reposes.get(position).getId();
-    }
-
-
-    public String getItemName(int position) {
-        return reposes.get(position).getName();
-    }
+//    @Override
+//    public long getItemId(int position) {
+//        return reposes.get(position).getId();
+//    }
+//
+//
+//    public String getItemName(int position) {
+//        return reposes.get(position).getName();
+//    }
 
     @Override
     public int getItemCount() {
@@ -60,19 +62,14 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
 
         ViewHolder(View itemView) {
             super(itemView);
-            tvMainList = view.findViewById(R.id.mainItemTextView);
+            tvMainList = itemView.findViewById(R.id.mainItemTextView);
             itemView.setOnClickListener(v -> {
-                if (onClickListener != null)
-                    onClickListener.onItemClick(v, getAdapterPosition());
+                listener.onItemClick(reposes.get(getAdapterPosition()));
             });
         }
     }
 
-    public void setClickListener(ItemClickListener itemClickListener) {
-        this.onClickListener = itemClickListener;
-    }
-
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
+    public interface Listener {
+        void onItemClick(Repo repo);
     }
 }

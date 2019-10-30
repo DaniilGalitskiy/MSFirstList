@@ -63,6 +63,7 @@
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/mainProgressBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/mainToolbar"/>
@@ -79,7 +80,7 @@
             android:id="@+id/mainRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/mainToolbar"
+            android:layout_below="@+id/mainProgressBar"
             android:clickable="true"
             android:focusable="true"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

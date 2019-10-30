@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,26 +27,28 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.arellomobile.mvp.MvpFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.msfirstlist.R;
-import com.example.msfirstlist.adapter.Entity.ReposList;
 import com.example.msfirstlist.adapter.ReposAdapter;
 import com.example.msfirstlist.repository.net.entity.Repo;
 
 import java.util.List;
 
-public class MainFragment extends MvpFragment implements MainView, ReposAdapter.ItemClickListener {
+public class MainFragment extends MvpFragment implements MainView{
 
-    private ReposAdapter reposAdapter;
-    private ReposList reposList;
+
+    @InjectPresenter
+    MainPresenter presenter;
+
+    private ReposAdapter reposAdapter = new ReposAdapter((Repo repo) -> {
+        presenter.onItemClicked(repo);
+    });
 
     private TextView emptyTextView;
     private MenuItem searchMenuItem;
     private LinearLayout mainToolbarLinear;
     private EditText mainSearchEditText;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private RecyclerView mainRecyclerView;
-
-    @InjectPresenter
-    MainPresenter presenter;
+//    private ProgressBar mainProgressBar;
+//    private SwipeRefreshLayout swipeRefreshLayout;
+//    private RecyclerView mainRecyclerView;
 
 
     @Override
@@ -71,31 +74,32 @@ public class MainFragment extends MvpFragment implements MainView, ReposAdapter.
     }
 
 
-    public void init(View view){
+    public void init(View view) {
 
-        mainRecyclerView = view.findViewById(R.id.mainRecyclerView);
-
-        Toolbar toolbar = view.findViewById(R.id.mainToolbar);
-
-        emptyTextView = view.findViewById(R.id.emptyTextView);
-        mainToolbarLinear = view.findViewById(R.id.mainToolbarLinear);
-        mainSearchEditText = view.findViewById(R.id.mainClearSearchQuery);
-        swipeRefreshLayout = view.findViewById(R.id.mainSwipeRefresh);
-        final ImageView mainBackSearchQuery = view.findViewById(R.id.mainBackSearchQuery);
-        final ImageView mainClearSearchQuery = view.findViewById(R.id.mainClearImageView);
-
-        reposList = new ReposList();
-        reposAdapter = new ReposAdapter();
-//        presenter.reloadRepos();
-
-//        reposAdapter = new ReposAdapter(reposList.getReposes());
-        final LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        mainRecyclerView.setLayoutManager(linearLayout);
+        final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.mainSwipeRefresh);
 
         swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
             swipeRefreshLayout.setRefreshing(false);
             reposAdapter.notifyDataSetChanged();
         }, 1000));
+
+
+        final RecyclerView mainRecyclerView = view.findViewById(R.id.mainRecyclerView);
+        final LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity());
+        mainRecyclerView.setLayoutManager(linearLayout);
+        mainRecyclerView.setAdapter(reposAdapter);
+
+
+        final Toolbar toolbar = view.findViewById(R.id.mainToolbar);
+
+        emptyTextView = view.findViewById(R.id.emptyTextView);
+        mainToolbarLinear = view.findViewById(R.id.mainToolbarLinear);
+        mainSearchEditText = view.findViewById(R.id.mainClearSearchQuery);
+
+        final ProgressBar mainProgressBar = view.findViewById(R.id.mainProgressBar);
+        final ImageView mainBackSearchQuery = view.findViewById(R.id.mainBackSearchQuery);
+        final ImageView mainClearSearchQuery = view.findViewById(R.id.mainClearImageView);
+
 
         mainSearchEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -118,12 +122,12 @@ public class MainFragment extends MvpFragment implements MainView, ReposAdapter.
             mainToolbarLinear.setVisibility(View.GONE);
             searchMenuItem.setVisible(true);
             InputMethodManager imm;
-            imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             assert imm != null;
-            imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         });
 
-        mainClearSearchQuery.setOnClickListener(v -> presenter.onQueryTextChanged(""));
+        mainClearSearchQuery.setOnClickListener(v -> presenter.onClearSearchClick());
 
 
         toolbar.setTitle(R.string.app_name);
@@ -133,9 +137,9 @@ public class MainFragment extends MvpFragment implements MainView, ReposAdapter.
             presenter.onSearchMenuItemClick();
             mainSearchEditText.requestFocus();
             mainSearchEditText.setFocusableInTouchMode(true);
-            if(mainSearchEditText.requestFocus()) {
+            if (mainSearchEditText.requestFocus()) {
                 InputMethodManager imm;
-                imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 assert imm != null;
                 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             }
@@ -151,11 +155,10 @@ public class MainFragment extends MvpFragment implements MainView, ReposAdapter.
 
     @Override
     public void setSearchActionViewVisible(boolean isVisible) {
-        if (isVisible){
+        if (isVisible) {
             mainToolbarLinear.setVisibility(View.VISIBLE);
             searchMenuItem.setVisible(false);
-        }
-        else{
+        } else {
             mainToolbarLinear.setVisibility(View.GONE);
             searchMenuItem.setVisible(true);
         }
@@ -167,43 +170,26 @@ public class MainFragment extends MvpFragment implements MainView, ReposAdapter.
     }
 
     @Override
-    public void setAdapter(List<Repo> repoList) {
+    public void setRepos(List<Repo> repoList) {
         reposAdapter.setReposes(repoList);
-        reposAdapter.notifyDataSetChanged();
-        reposAdapter.setClickListener(this);
-        mainRecyclerView.setAdapter(reposAdapter);
     }
 
     @Override
     public void setSearchQueryText(String query) {
-        reposList.filter(query);
-        reposAdapter.notifyDataSetChanged();
-
-        if (reposList.getReposes().size() == 0)
-        {
-            emptyTextView.setVisibility(View.VISIBLE);
-        } else {
-            emptyTextView.setVisibility(View.GONE);
-        }
-
-        if (mainSearchEditText.getText().toString().equals(query)) return;
         mainSearchEditText.setText(query);
+    }
+
+    @Override
+    public void setVisibleEmptySearchRepos(){
+        if (reposAdapter.getItemCount() == 0)
+            emptyTextView.setVisibility(View.VISIBLE);
+        else
+            emptyTextView.setVisibility(View.GONE);
     }
 
     @SuppressLint("ShowToast")
     @Override
     public void showError(String msg) {
         Toast.makeText(getActivity(), msg, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        switch (view.getId()) {
-            case R.id.linearMainList:
-                presenter.onItemClicked(reposAdapter.getItemName(position));
-                break;
-            default:
-                break;
-        }
     }
 }
