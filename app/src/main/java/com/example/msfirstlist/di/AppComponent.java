@@ -4,9 +4,8 @@ import android.content.Context;
 
 import com.example.msfirstlist.App;
 import com.example.msfirstlist.presenter.main.MainActivity;
-import com.example.msfirstlist.presenter.main.MainFragment;
 import com.example.msfirstlist.presenter.main.MainPresenter;
-import com.example.msfirstlist.presenter.repo.RepoFragment;
+import com.example.msfirstlist.presenter.repo.RepoPresenter;
 
 import javax.inject.Singleton;
 
@@ -20,13 +19,11 @@ public interface AppComponent {
 
     void inject(MainActivity activity);
 
-    void inject(MainFragment fragment);
-
-    void inject(RepoFragment fragment);
-
     void inject(MainPresenter presenter);
 
     void inject(App app);
+
+    void inject(RepoPresenter repoPresenter);
 
 
     @Component.Builder

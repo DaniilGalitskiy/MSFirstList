@@ -3,7 +3,6 @@ package com.example.msfirstlist.presenter.main;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -32,33 +31,29 @@ import com.example.msfirstlist.repository.net.entity.Repo;
 
 import java.util.List;
 
-public class MainFragment extends MvpFragment implements MainView{
-
+public class MainFragment extends MvpFragment implements MainView {
 
     @InjectPresenter
     MainPresenter presenter;
 
-    private ReposAdapter reposAdapter = new ReposAdapter((Repo repo) -> {
-        presenter.onItemClicked(repo);
-    });
+    private ReposAdapter reposAdapter = new ReposAdapter((Repo repo) -> presenter.onItemClicked(repo));
 
     private TextView emptyTextView;
     private MenuItem searchMenuItem;
     private LinearLayout mainToolbarLinear;
     private EditText mainSearchEditText;
-//    private ProgressBar mainProgressBar;
-//    private SwipeRefreshLayout swipeRefreshLayout;
-//    private RecyclerView mainRecyclerView;
+    private ProgressBar mainProgressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
+
+    public static MainFragment getNewInstance() {
+        return new MainFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         presenter.onCreate(savedInstanceState);
-    }
-
-    public static MainFragment getNewInstance() {
-        return new MainFragment();
     }
 
     @Nullable
@@ -76,12 +71,11 @@ public class MainFragment extends MvpFragment implements MainView{
 
     public void init(View view) {
 
-        final SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.mainSwipeRefresh);
-
-        swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
+        swipeRefreshLayout = view.findViewById(R.id.mainSwipeRefresh);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            presenter.reloadRepos();
             swipeRefreshLayout.setRefreshing(false);
-            reposAdapter.notifyDataSetChanged();
-        }, 1000));
+        });
 
 
         final RecyclerView mainRecyclerView = view.findViewById(R.id.mainRecyclerView);
@@ -96,7 +90,7 @@ public class MainFragment extends MvpFragment implements MainView{
         mainToolbarLinear = view.findViewById(R.id.mainToolbarLinear);
         mainSearchEditText = view.findViewById(R.id.mainClearSearchQuery);
 
-        final ProgressBar mainProgressBar = view.findViewById(R.id.mainProgressBar);
+        mainProgressBar = view.findViewById(R.id.mainProgressBar);
         final ImageView mainBackSearchQuery = view.findViewById(R.id.mainBackSearchQuery);
         final ImageView mainClearSearchQuery = view.findViewById(R.id.mainClearImageView);
 
@@ -128,7 +122,6 @@ public class MainFragment extends MvpFragment implements MainView{
         });
 
         mainClearSearchQuery.setOnClickListener(v -> presenter.onClearSearchClick());
-
 
         toolbar.setTitle(R.string.app_name);
         getActivity().getMenuInflater().inflate(R.menu.fragment_main_menu, toolbar.getMenu());
@@ -165,11 +158,6 @@ public class MainFragment extends MvpFragment implements MainView{
     }
 
     @Override
-    public void showLoader() {
-
-    }
-
-    @Override
     public void setRepos(List<Repo> repoList) {
         reposAdapter.setReposes(repoList);
     }
@@ -180,7 +168,15 @@ public class MainFragment extends MvpFragment implements MainView{
     }
 
     @Override
-    public void setVisibleEmptySearchRepos(){
+    public void showLoader(boolean visible) {
+        if (visible)
+            mainProgressBar.setVisibility(View.VISIBLE);
+        else
+            mainProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setVisibleEmptySearchRepos() {
         if (reposAdapter.getItemCount() == 0)
             emptyTextView.setVisibility(View.VISIBLE);
         else

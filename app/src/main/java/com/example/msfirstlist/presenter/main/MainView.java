@@ -13,6 +13,6 @@ public interface MainView extends MvpView {
     void showError(String msg);
     void setSearchActionViewVisible(boolean isVisible);
     void setVisibleEmptySearchRepos();
-    void showLoader();
+    void showLoader(boolean visible);
     void setRepos(List<Repo> repoList);
 }

@@ -11,13 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.arellomobile.mvp.MvpFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
-import com.arellomobile.mvp.presenter.ProvidePresenter;
-import com.example.msfirstlist.App;
 import com.example.msfirstlist.R;
-
-import javax.inject.Inject;
-
-import ru.terrakok.cicerone.Router;
 
 public class RepoFragment extends MvpFragment implements RepoView{
 
@@ -26,16 +20,13 @@ public class RepoFragment extends MvpFragment implements RepoView{
     private Button backButton;
     private TextView repoTextView;
 
-    @Inject
-    Router router;
-
     @InjectPresenter
     RepoPresenter presenter;
 
-    @ProvidePresenter
-    public RepoPresenter createReposPresenter(){
-        return new RepoPresenter(router, getExtraRepos());
-    }
+//    @ProvidePresenter
+//    public RepoPresenter createReposPresenter(){
+//        return new RepoPresenter(getExtraRepos());
+//    }
 
     public RepoFragment getNewInstance(String repos){
         RepoFragment repoFragment = new RepoFragment();
@@ -51,7 +42,6 @@ public class RepoFragment extends MvpFragment implements RepoView{
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        App.getAppComponent().inject(this);
         super.onCreate(savedInstanceState);
     }
 
@@ -74,8 +64,5 @@ public class RepoFragment extends MvpFragment implements RepoView{
         super.onActivityCreated(savedInstanceState);
         repoTextView.setText(getExtraRepos());
         backButton.setOnClickListener(v -> presenter.onBackPressed());
-
     }
-
-
 }

@@ -32,7 +32,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
     private static final String ARG_SEARCHVISIBLE = "onSearchMenuItemClick";
     private static final String ARG_SEARCHQUERY = "searchQuery";
 
-
     private @Nullable
     Disposable reloadDisposable = null;
 
@@ -41,8 +40,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
     @Inject
     DataBaseInteractor dataBaseInteractor;
-
-
 
     private final BehaviorSubject<String> queryBehaviorSubject = BehaviorSubject.create();
     private final BehaviorSubject<Boolean> isSearchVisibleBehaviorSubject = BehaviorSubject.createDefault(false);
@@ -95,7 +92,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
     public void onCreate(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             isSearchVisibleBehaviorSubject.onNext(savedInstanceState.getBoolean(ARG_SEARCHVISIBLE));
-
             getViewState().setSearchQueryText(savedInstanceState.getString(ARG_SEARCHQUERY));
         }
     }
@@ -107,10 +103,11 @@ public class MainPresenter extends MvpPresenter<MainView> {
 
     public void reloadRepos() {
         if (reloadDisposable != null) reloadDisposable.dispose();
-
+        getViewState().showLoader(true);
         reloadDisposable = dataBaseInteractor.reloadRepos()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doFinally(() -> getViewState().showLoader(false))
                 .subscribe(() -> {
         }, throwable -> {
             if (throwable instanceof ConnectException || throwable instanceof UnknownHostException)
