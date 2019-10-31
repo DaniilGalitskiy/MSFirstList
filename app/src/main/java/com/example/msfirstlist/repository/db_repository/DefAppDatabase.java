@@ -3,11 +3,12 @@ package com.example.msfirstlist.repository.db_repository;
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 
-import com.example.msfirstlist.repository.db_repository.dao.ReposDao;
-import com.example.msfirstlist.repository.db_repository.db_entities.DBRepos;
+import com.example.msfirstlist.repository.db_repository.dao.RepoDao;
+import com.example.msfirstlist.repository.net.entity.Repo;
 
-@Database(entities = DBRepos.class, version = 1)
+@Database(entities = Repo.class, version = 1, exportSchema = false)
 public abstract class DefAppDatabase extends RoomDatabase implements AppDatabase {
+
     @Override
-    public abstract ReposDao getReposDao();
+    public abstract RepoDao getRepoDao();
 }

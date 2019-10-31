@@ -8,55 +8,68 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.msfirstlist.R;
-import com.example.msfirstlist.adapter.Entity.Repo;
+import com.example.msfirstlist.repository.net.entity.Repo;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> {
 
-    private List<Repo> repoList;
+    private List<Repo> reposes = Collections.emptyList();
 
-    private View view;
-    private View.OnClickListener onClickListener;
+    private Listener listener;
 
 
-    public ReposAdapter(List<Repo> repos, View.OnClickListener onClickListener) {
-        this.repoList = repos;
-        this.onClickListener = onClickListener;
+    public ReposAdapter(Listener listener) {
+        this.listener = listener;
     }
 
+    public void setReposes(List<Repo> reposes) {
+        this.reposes = reposes;
+        notifyDataSetChanged();
+    }
 
     @Override
     public ReposAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_main, parent, false);
+        final View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_main, parent, false);
 
-        return new ReposAdapter.ViewHolder(view, onClickListener);
+        return new ReposAdapter.ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ReposAdapter.ViewHolder holder, int position) {
-        holder.tvMainList.setText(repoList.get(position).getName());
+        holder.tvMainList.setText(reposes.get(position).getName());
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
+//    @Override
+//    public long getItemId(int position) {
+//        return reposes.get(position).getId();
+//    }
+//
+//
+//    public String getItemName(int position) {
+//        return reposes.get(position).getName();
+//    }
 
     @Override
     public int getItemCount() {
-        return repoList.size();
+        return reposes.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
         private TextView tvMainList;
 
-        ViewHolder(View itemView, View.OnClickListener onClickListener) {
+        ViewHolder(View itemView) {
             super(itemView);
-            tvMainList = view.findViewById(R.id.tvMainList);
-            view.setOnClickListener(onClickListener);
+            tvMainList = itemView.findViewById(R.id.mainItemTextView);
+            itemView.setOnClickListener(v -> {
+                listener.onItemClick(reposes.get(getAdapterPosition()));
+            });
         }
+    }
+
+    public interface Listener {
+        void onItemClick(Repo repo);
     }
 }

@@ -1,57 +1,51 @@
 package com.example.msfirstlist.adapter.Entity;
 
 
-import java.util.ArrayList;
+import com.example.msfirstlist.repository.net.entity.Repo;
+
 import java.util.List;
 import java.util.Locale;
 
 public class ReposList {
 
-    public ReposList reposList;
-
     private List<Repo> reposes;
 
-    /*public ReposList getReposList() {
-
-        if (reposList == null) {
-            reposList = new ReposList();
-        }
-        return reposList;
-
-    }*/
-
-
     public void filter(String charText){
+        ReposList reposList = new ReposList();
         charText = charText.toLowerCase(Locale.getDefault());
-        reposList.clear();
+        reposes.clear();
         if (charText.length()==0){
-            reposList.addAll(reposArrayList);
+            reposes.addAll(reposList.reposes);
         }
         else {
-            for (Repo r : reposArrayList){
+            for (Repo r : reposList.reposes){
                 if (r.getName().toLowerCase(Locale.getDefault())
                         .contains(charText)){
-                    reposList.add(r);
+                    reposes.add(r);
                 }
             }
         }
-        notifyDataSetChanged();
     }
 
-    public ReposList() {
-        reposes = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            Repo repo = new Repo();
-            repo.setId(i);
-            repo.setName("Repo#" + i);
-            reposes.add(repo);
+//    public ReposList() {
+//        reposes = new ArrayList<>();
+//        for (int i = 0; i < 100; i++) {
+//            Repos repos = new Repos();
+//            repos.setId(i);
+//            repos.setName("Repos#" + i);
+//            reposes.add(repos);
+//
+//        }
+//    }
 
-        }
-    }
-
-    public void addData(Repo c) {
-        reposes.add(c);
-    }
+//    public ReposList addAll(List<Repo> repoList){
+//        ReposList reposList = new ReposList();
+//        reposes = new ArrayList<>();
+//        for(Repo r : repoList){
+//            reposes.add(r);
+//        }
+//        return reposList;
+//    }
 
     public List<Repo> getReposes() {
         return reposes;

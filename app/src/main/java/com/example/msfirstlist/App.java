@@ -16,6 +16,7 @@ public class App extends Application {
         INSTANCE = this;
         appComponent = DaggerAppComponent
                 .builder()
+                .context(this)
                 .build();
         appComponent.inject(this);
     }
@@ -23,4 +24,6 @@ public class App extends Application {
     public static AppComponent getAppComponent() {
         return appComponent;
     }
+
+
 }

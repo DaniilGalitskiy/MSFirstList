@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
     <Button
-        android:id="@+id/btBack"
+        android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawableStart="@drawable/ic_arrow_back_black_24dp"
@@ -15,7 +15,7 @@
         android:orientation="vertical"
         android:gravity="center">
         <TextView
-            android:id="@+id/tvRepos"
+            android:id="@+id/repoTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="test"/>
