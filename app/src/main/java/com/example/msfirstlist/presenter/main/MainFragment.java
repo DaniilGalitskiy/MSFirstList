@@ -124,7 +124,6 @@ public class MainFragment extends MvpFragment implements MainView {
         });
 
         mainClearSearchQuery.setOnClickListener(v -> {
-            mainSearchEditText.setText("");
             presenter.onClearSearchClick();
         });
 

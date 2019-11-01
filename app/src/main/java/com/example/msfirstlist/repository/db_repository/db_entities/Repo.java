@@ -5,7 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "repos")
-public class DBRepos {
+public class Repo {
     @PrimaryKey
     private int id;
     @ColumnInfo(name = "name")

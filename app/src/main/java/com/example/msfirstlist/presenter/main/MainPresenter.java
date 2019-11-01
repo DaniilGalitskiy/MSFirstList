@@ -14,6 +14,7 @@ import com.example.msfirstlist.repository.net.entity.Repo;
 import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -60,7 +61,6 @@ public class MainPresenter extends MvpPresenter<MainView> {
             .subscribe(repoList -> {
                 getViewState().setRepos(repoList);
                 getViewState().setVisibleEmptySearchRepos();
-                getViewState().setSearchQueryText(queryBehaviorSubject.getValue());
             });
 
     public MainPresenter() {
@@ -83,7 +83,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     public void onClearSearchClick() {
-        queryBehaviorSubject.onNext("");
+        getViewState().setSearchQueryText("");
     }
 
     void onItemClicked(Repo repo) {
@@ -93,7 +93,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
     public void onCreate(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             isSearchVisibleBehaviorSubject.onNext(savedInstanceState.getBoolean(ARG_SEARCHVISIBLE));
-            getViewState().setSearchQueryText(savedInstanceState.getString(ARG_SEARCHQUERY));
+            getViewState().setSearchQueryText(Objects.requireNonNull(savedInstanceState.getString(ARG_SEARCHQUERY)));
         }
     }
 
