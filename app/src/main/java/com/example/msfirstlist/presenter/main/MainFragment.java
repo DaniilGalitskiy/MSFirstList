@@ -183,6 +183,7 @@ public class MainFragment extends MvpFragment implements MainView {
     @Override
     public void setSearchQueryText(String query) {
         mainSearchEditText.setText(query);
+        mainSearchEditText.setSelection(mainSearchEditText.getText().length());
     }
 
     @Override

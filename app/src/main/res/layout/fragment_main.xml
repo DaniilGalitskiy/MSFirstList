@@ -23,7 +23,7 @@
             android:layout_margin="8dp"
             android:background="@drawable/rectangle_rounded_edittext_toolbar"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/mainBackSearchQuery"
@@ -43,6 +43,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:hint="@string/search"
+                android:textColorHint="@android:color/darker_gray"
                 android:background="@null"
                 android:maxLines="1"
                 android:lines="1"
