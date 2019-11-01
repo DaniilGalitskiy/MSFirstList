@@ -110,12 +110,12 @@ public class MainPresenter extends MvpPresenter<MainView> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally(() -> getViewState().showLoader(false))
                 .subscribe(() -> {
-        }, throwable -> {
-            if (throwable instanceof ConnectException || throwable instanceof UnknownHostException)
-                getViewState().showError("Ошибка соединения reloadRepos()\n" + throwable.getMessage());
-            else
-                getViewState().showError("Неизвестная ошибка reloadRepos()\n" + throwable.getMessage());
-        });
+                }, throwable -> {
+                    if (throwable instanceof ConnectException || throwable instanceof UnknownHostException)
+                        getViewState().showError("Ошибка соединения reloadRepos()\n" + throwable.getMessage());
+                    else
+                        getViewState().showError("Неизвестная ошибка reloadRepos()\n" + throwable.getMessage());
+                });
     }
 
     @Override
