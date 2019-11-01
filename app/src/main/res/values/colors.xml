@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="primary">#e74c3c</color>
+    <color name="primary_dark">#000000</color>
+    <color name="accent">#e74c3c</color>
+    <color name="toolbarWhite">#ffffff</color>
+    <color name="ripple">#C7C7C7</color>
+
+
+    <color name="alizarin">#e74c3c</color>
+    <color name="carrot">#e67e22</color>
+    <color name="sunflower">#f1c40f</color>
+    <color name="greensea">#16a085</color>
+    <color name="nephritis">#27ae60</color>
+    <color name="belizehole">#2980b9</color>
 </resources>
