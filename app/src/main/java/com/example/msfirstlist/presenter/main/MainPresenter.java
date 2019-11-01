@@ -60,6 +60,7 @@ public class MainPresenter extends MvpPresenter<MainView> {
             .subscribe(repoList -> {
                 getViewState().setRepos(repoList);
                 getViewState().setVisibleEmptySearchRepos();
+                getViewState().setSearchQueryText(queryBehaviorSubject.getValue());
             });
 
     public MainPresenter() {
@@ -77,12 +78,12 @@ public class MainPresenter extends MvpPresenter<MainView> {
     }
 
     public void onCloseSearchClick() {
-        isSearchVisibleBehaviorSubject.onNext(false);
         onClearSearchClick();
+        isSearchVisibleBehaviorSubject.onNext(false);
     }
 
     public void onClearSearchClick() {
-        getViewState().setSearchQueryText("");
+        queryBehaviorSubject.onNext("");
     }
 
     void onItemClicked(Repo repo) {
