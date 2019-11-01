@@ -11,10 +11,10 @@
         android:background="@color/primary_dark"
         android:minHeight="?attr/actionBarSize"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
         <LinearLayout
             android:id="@+id/mainToolbarLinear"
@@ -42,13 +42,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="1"
-                android:hint="@string/search"
-                android:textColorHint="@android:color/darker_gray"
                 android:background="@null"
-                android:maxLines="1"
-                android:lines="1"
+                android:hint="@string/search"
                 android:inputType="text"
-                android:textColor="@color/primary_dark" />
+                android:lines="1"
+                android:maxLines="1"
+                android:textColor="@color/primary_dark"
+                android:textColorHint="@android:color/darker_gray" />
 
             <ImageView
                 android:id="@+id/mainClearImageView"
@@ -64,28 +64,27 @@
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.core.widget.ContentLoadingProgressBar
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:id="@+id/mainProgressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
         android:layout_height="8dp"
         android:indeterminate="true"
-        app:layout_constraintTop_toBottomOf="@+id/mainToolbar"/>
+        app:layout_constraintTop_toBottomOf="@+id/mainToolbar" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/mainSwipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_below="@+id/mainToolbar"
-        app:layout_constraintTop_toBottomOf="@id/mainToolbar"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/mainToolbar">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mainRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/mainProgressBar"
             android:clickable="true"
-            android:focusable="true"/>
+            android:focusable="true" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <TextView
@@ -94,9 +93,9 @@
         android:layout_height="wrap_content"
         android:text="@string/list_is_empty"
         android:textSize="14sp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

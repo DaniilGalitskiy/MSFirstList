@@ -21,19 +21,10 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import ru.terrakok.cicerone.Cicerone;
-import ru.terrakok.cicerone.NavigatorHolder;
-import ru.terrakok.cicerone.Router;
 
 
 @Module(includes = {AndroidSupportInjectionModule.class})
 public class AppModule {
-
-    private final static long CONNECT_TIMEOUT = 2500;
-
-    public AppModule() {
-        cicerone = Cicerone.create();
-    }
 
 
     // Data
@@ -47,14 +38,12 @@ public class AppModule {
 
     @Provides
     static Api api() {
-        final String URL = "https://api.github.com";
-
         final OkHttpClient okHttpClient = new OkHttpClient().newBuilder()
-                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
+                .connectTimeout(Api.CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
                 .build();
 
         final Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(URL)
+                .baseUrl(Api.URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(okHttpClient)
@@ -71,21 +60,5 @@ public class AppModule {
         return new DefDataBaseInteractor(repoDao, api);
     }
 
-    //cicerone
-    private Cicerone<Router> cicerone;
-
-
-    @Provides
-    @Singleton
-    Router provideRouter() {
-        return cicerone.getRouter();
-    }
-
-
-    @Provides
-    @Singleton
-    NavigatorHolder provideNavigatorHolder() {
-        return cicerone.getNavigatorHolder();
-    }
 
 }

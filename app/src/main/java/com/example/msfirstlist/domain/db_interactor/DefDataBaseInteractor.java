@@ -11,21 +11,21 @@ import io.reactivex.Observable;
 
 public class DefDataBaseInteractor implements DataBaseInteractor {
 
-    private final RepoDao repoDao;
+    private final RepoDao db;
     private Api api;
 
-    public DefDataBaseInteractor(RepoDao repoDao, Api api) {
-        this.repoDao = repoDao;
+    public DefDataBaseInteractor(RepoDao db, Api api) {
+        this.db = db;
         this.api = api;
     }
 
     @Override
     public Observable<List<Repo>> getAll(String query) {
-        return query.isEmpty() ? repoDao.getAll() : repoDao.getRepoByName(query) ;
+        return query.isEmpty() ? db.getAll() : db.getRepoByName(query);
     }
 
     @Override
     public Completable reloadRepos() {
-        return api.getAll().doOnSuccess(repoDao::insertAll).ignoreElement();
+        return api.getAll().doOnSuccess(db::clearAndInsertAll).ignoreElement();
     }
 }

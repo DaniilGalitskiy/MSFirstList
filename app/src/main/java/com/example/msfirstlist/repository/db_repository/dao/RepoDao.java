@@ -1,26 +1,24 @@
 package com.example.msfirstlist.repository.db_repository.dao;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-import androidx.room.Update;
+import androidx.room.Transaction;
 
 import com.example.msfirstlist.repository.net.entity.Repo;
 
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.Single;
+import kotlin.jvm.Synchronized;
 
 @Dao
 public interface RepoDao {
+
+    @Synchronized
     @Query("SELECT * FROM Repo")
     Observable<List<Repo>> getAll();
-
-    @Query("SELECT * FROM Repo WHERE id = :id")
-    Single<Repo> getRepoById(long id);
 
     @Query("SELECT * FROM Repo WHERE name like '%'||:name||'%'")
     Observable<List<Repo>> getRepoByName(String name);
@@ -28,12 +26,13 @@ public interface RepoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     List<Long> insertAll(List<Repo> reposes);
 
-    @Insert
-    void insert(Repo repos);
+    @Synchronized
+    @Query("DELETE FROM Repo")
+    void removeAll();
 
-    @Update
-    void update(Repo repos);
-
-    @Delete
-    void delete(Repo repos);
+    @Transaction
+    default void clearAndInsertAll(List<Repo> listRepo) {
+        removeAll();
+        insertAll(listRepo);
+    }
 }

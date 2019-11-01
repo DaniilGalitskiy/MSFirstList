@@ -154,21 +154,11 @@ public class MainFragment extends MvpFragment implements MainView {
     public void setSearchActionViewVisible(boolean isVisible) {
         if (isVisible) {
             mainToolbarLinear.setVisibility(View.VISIBLE);
-//            Animation fadeIn = new AlphaAnimation(0, 1);
-//            fadeIn.setDuration(100);
-//            AnimationSet animation = new AnimationSet(true);
-//            animation.addAnimation(fadeIn);
-//            mainToolbarLinear.setAnimation(animation);
             Animation aniFadeIn = AnimationUtils.loadAnimation(getActivity(),R.anim.fade_in_toolbar_search);
             mainToolbarLinear.startAnimation(aniFadeIn);
             searchMenuItem.setVisible(false);
         } else {
             mainToolbarLinear.setVisibility(View.GONE);
-//            Animation fadeOut = new AlphaAnimation(1, 0);
-//            fadeOut.setDuration(100);
-//            AnimationSet animation = new AnimationSet(true);
-//            animation.addAnimation(fadeOut);
-//            mainToolbarLinear.setAnimation(animation);
             Animation aniFadeOut = AnimationUtils.loadAnimation(getActivity(),R.anim.fade_out_toolbar_search);
             mainToolbarLinear.startAnimation(aniFadeOut);
             searchMenuItem.setVisible(true);
