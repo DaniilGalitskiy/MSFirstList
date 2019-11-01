@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -87,7 +89,9 @@ public class MainFragment extends MvpFragment implements MainView {
         final Toolbar toolbar = view.findViewById(R.id.mainToolbar);
 
         emptyTextView = view.findViewById(R.id.emptyTextView);
+
         mainToolbarLinear = view.findViewById(R.id.mainToolbarLinear);
+
         mainSearchEditText = view.findViewById(R.id.mainClearSearchQuery);
 
         mainProgressBar = view.findViewById(R.id.mainProgressBar);
@@ -113,15 +117,16 @@ public class MainFragment extends MvpFragment implements MainView {
 
         mainBackSearchQuery.setOnClickListener(v -> {
             presenter.onCloseSearchClick();
-            mainToolbarLinear.setVisibility(View.GONE);
-            searchMenuItem.setVisible(true);
             InputMethodManager imm;
             imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             assert imm != null;
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         });
 
-        mainClearSearchQuery.setOnClickListener(v -> presenter.onClearSearchClick());
+        mainClearSearchQuery.setOnClickListener(v -> {
+            mainSearchEditText.setText("");
+            presenter.onClearSearchClick();
+        });
 
         toolbar.setTitle(R.string.app_name);
         getActivity().getMenuInflater().inflate(R.menu.fragment_main_menu, toolbar.getMenu());
@@ -150,9 +155,23 @@ public class MainFragment extends MvpFragment implements MainView {
     public void setSearchActionViewVisible(boolean isVisible) {
         if (isVisible) {
             mainToolbarLinear.setVisibility(View.VISIBLE);
+//            Animation fadeIn = new AlphaAnimation(0, 1);
+//            fadeIn.setDuration(100);
+//            AnimationSet animation = new AnimationSet(true);
+//            animation.addAnimation(fadeIn);
+//            mainToolbarLinear.setAnimation(animation);
+            Animation aniFadeIn = AnimationUtils.loadAnimation(getActivity(),R.anim.fade_in_toolbar_search);
+            mainToolbarLinear.startAnimation(aniFadeIn);
             searchMenuItem.setVisible(false);
         } else {
             mainToolbarLinear.setVisibility(View.GONE);
+//            Animation fadeOut = new AlphaAnimation(1, 0);
+//            fadeOut.setDuration(100);
+//            AnimationSet animation = new AnimationSet(true);
+//            animation.addAnimation(fadeOut);
+//            mainToolbarLinear.setAnimation(animation);
+            Animation aniFadeOut = AnimationUtils.loadAnimation(getActivity(),R.anim.fade_out_toolbar_search);
+            mainToolbarLinear.startAnimation(aniFadeOut);
             searchMenuItem.setVisible(true);
         }
     }

@@ -23,11 +23,6 @@ public class RepoFragment extends MvpFragment implements RepoView{
     @InjectPresenter
     RepoPresenter presenter;
 
-//    @ProvidePresenter
-//    public RepoPresenter createReposPresenter(){
-//        return new RepoPresenter(getExtraRepos());
-//    }
-
     public RepoFragment getNewInstance(String repos){
         RepoFragment repoFragment = new RepoFragment();
         Bundle args = new Bundle();
