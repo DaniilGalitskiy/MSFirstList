@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -17,7 +16,6 @@ public class RepoFragment extends MvpFragment implements RepoView{
 
     private static final String EXTRA_REPO = "extra_repo";
 
-    private Button backButton;
     private TextView repoTextView;
 
     @InjectPresenter
@@ -35,11 +33,6 @@ public class RepoFragment extends MvpFragment implements RepoView{
         return getArguments().getString(EXTRA_REPO);
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -50,14 +43,18 @@ public class RepoFragment extends MvpFragment implements RepoView{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        backButton = view.findViewById(R.id.backButton);
+        view.findViewById(R.id.backButton).setOnClickListener(v -> presenter.onBackPressed());
         repoTextView = view.findViewById(R.id.repoTextView);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        repoTextView.setText(getExtraRepos());
-        backButton.setOnClickListener(v -> presenter.onBackPressed());
+        presenter.currentRepoName(getExtraRepos());
+    }
+
+    @Override
+    public void showRepoName(String repoName) {
+        repoTextView.setText(repoName);
     }
 }

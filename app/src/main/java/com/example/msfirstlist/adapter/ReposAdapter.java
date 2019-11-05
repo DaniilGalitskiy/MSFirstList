@@ -62,7 +62,7 @@ public class ReposAdapter extends RecyclerView.Adapter<ReposAdapter.ViewHolder> 
 
         ViewHolder(View itemView) {
             super(itemView);
-            tvMainList = itemView.findViewById(R.id.mainItemTextView);
+            tvMainList = itemView.findViewById(R.id.itemTextView);
             itemView.setOnClickListener(v -> {
                 listener.onItemClick(reposes.get(getAdapterPosition()));
             });

@@ -18,6 +18,10 @@ public class RepoPresenter extends MvpPresenter<RepoView> {
         App.getAppComponent().inject(this);
     }
 
+    public void currentRepoName(String repoName){
+        getViewState().showRepoName(repoName);
+    }
+
     public void onBackPressed(){
         router.exit();
     }

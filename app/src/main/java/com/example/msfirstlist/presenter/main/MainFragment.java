@@ -42,9 +42,9 @@ public class MainFragment extends MvpFragment implements MainView {
 
     private TextView emptyTextView;
     private MenuItem searchMenuItem;
-    private LinearLayout mainToolbarLinear;
-    private EditText mainSearchEditText;
-    private ProgressBar mainProgressBar;
+    private LinearLayout toolbarLinear;
+    private EditText searchEditText;
+    private ProgressBar progressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
 
@@ -73,33 +73,29 @@ public class MainFragment extends MvpFragment implements MainView {
 
     public void init(View view) {
 
-        swipeRefreshLayout = view.findViewById(R.id.mainSwipeRefresh);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefresh);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             presenter.reloadRepos();
             swipeRefreshLayout.setRefreshing(false);
         });
 
 
-        final RecyclerView mainRecyclerView = view.findViewById(R.id.mainRecyclerView);
-        final LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity());
-        mainRecyclerView.setLayoutManager(linearLayout);
-        mainRecyclerView.setAdapter(reposAdapter);
+        final RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(reposAdapter);
 
-
-        final Toolbar toolbar = view.findViewById(R.id.mainToolbar);
+        final Toolbar toolbar = view.findViewById(R.id.toolbar);
 
         emptyTextView = view.findViewById(R.id.emptyTextView);
+        toolbarLinear = view.findViewById(R.id.toolbarLinear);
+        searchEditText = view.findViewById(R.id.clearSearchQuery);
 
-        mainToolbarLinear = view.findViewById(R.id.mainToolbarLinear);
-
-        mainSearchEditText = view.findViewById(R.id.mainClearSearchQuery);
-
-        mainProgressBar = view.findViewById(R.id.mainProgressBar);
-        final ImageView mainBackSearchQuery = view.findViewById(R.id.mainBackSearchQuery);
-        final ImageView mainClearSearchQuery = view.findViewById(R.id.mainClearImageView);
+        progressBar = view.findViewById(R.id.progressBar);
+        final ImageView backSearchQuery = view.findViewById(R.id.backSearchQuery);
+        final ImageView clearSearchQuery = view.findViewById(R.id.clearImageView);
 
 
-        mainSearchEditText.addTextChangedListener(new TextWatcher() {
+        searchEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -115,7 +111,7 @@ public class MainFragment extends MvpFragment implements MainView {
             }
         });
 
-        mainBackSearchQuery.setOnClickListener(v -> {
+        backSearchQuery.setOnClickListener(v -> {
             presenter.onCloseSearchClick();
             InputMethodManager imm;
             imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -123,7 +119,7 @@ public class MainFragment extends MvpFragment implements MainView {
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         });
 
-        mainClearSearchQuery.setOnClickListener(v -> {
+        clearSearchQuery.setOnClickListener(v -> {
             presenter.onClearSearchClick();
         });
 
@@ -132,9 +128,9 @@ public class MainFragment extends MvpFragment implements MainView {
         searchMenuItem = toolbar.getMenu().findItem(R.id.actionSearch);
         searchMenuItem.setOnMenuItemClickListener(item -> {
             presenter.onSearchMenuItemClick();
-            mainSearchEditText.requestFocus();
-            mainSearchEditText.setFocusableInTouchMode(true);
-            if (mainSearchEditText.requestFocus()) {
+            searchEditText.requestFocus();
+            searchEditText.setFocusableInTouchMode(true);
+            if (searchEditText.requestFocus()) {
                 InputMethodManager imm;
                 imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 assert imm != null;
@@ -153,24 +149,14 @@ public class MainFragment extends MvpFragment implements MainView {
     @Override
     public void setSearchActionViewVisible(boolean isVisible) {
         if (isVisible) {
-            mainToolbarLinear.setVisibility(View.VISIBLE);
-//            Animation fadeIn = new AlphaAnimation(0, 1);
-//            fadeIn.setDuration(100);
-//            AnimationSet animation = new AnimationSet(true);
-//            animation.addAnimation(fadeIn);
-//            mainToolbarLinear.setAnimation(animation);
+            toolbarLinear.setVisibility(View.VISIBLE);
             Animation aniFadeIn = AnimationUtils.loadAnimation(getActivity(),R.anim.fade_in_toolbar_search);
-            mainToolbarLinear.startAnimation(aniFadeIn);
+            toolbarLinear.startAnimation(aniFadeIn);
             searchMenuItem.setVisible(false);
         } else {
-            mainToolbarLinear.setVisibility(View.GONE);
-//            Animation fadeOut = new AlphaAnimation(1, 0);
-//            fadeOut.setDuration(100);
-//            AnimationSet animation = new AnimationSet(true);
-//            animation.addAnimation(fadeOut);
-//            mainToolbarLinear.setAnimation(animation);
+            toolbarLinear.setVisibility(View.GONE);
             Animation aniFadeOut = AnimationUtils.loadAnimation(getActivity(),R.anim.fade_out_toolbar_search);
-            mainToolbarLinear.startAnimation(aniFadeOut);
+            toolbarLinear.startAnimation(aniFadeOut);
             searchMenuItem.setVisible(true);
         }
     }
@@ -182,16 +168,16 @@ public class MainFragment extends MvpFragment implements MainView {
 
     @Override
     public void setSearchQueryText(String query) {
-        mainSearchEditText.setText(query);
-        mainSearchEditText.setSelection(mainSearchEditText.getText().length());
+        searchEditText.setText(query);
+        searchEditText.setSelection(searchEditText.getText().length());
     }
 
     @Override
     public void showLoader(boolean visible) {
         if (visible)
-            mainProgressBar.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
         else
-            mainProgressBar.setVisibility(View.GONE);
+            progressBar.setVisibility(View.GONE);
     }
 
     @Override
